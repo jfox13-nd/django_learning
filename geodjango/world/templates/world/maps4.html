@@ -1,0 +1,118 @@
+{% load leaflet_tags %}
+<html>
+  <head>
+
+    {% leaflet_js %}
+    {% leaflet_css %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'world/style.css' %}" />
+    
+    <title>Map Viewer</title>
+
+    <style>
+      #mapid { height: 100%; width: 100%; }
+      #mainTitle { text-align: center; }
+    </style>
+   
+  </head>
+  <body>
+
+    <h1 id="mainTitle">Map Viewer</h1>
+    <br>
+    <a href="/">Go Back</a>
+    <br>
+
+    <div id="side-bar">
+        <!--
+        <p>Add Layers</p>
+        <button class="collapsible" onclick="putLayer(mymap, 'geonode:village_shapefile_palghar', appendlayer)">Village Palghar</button>
+        <button class="collapsible" onclick="putLayer(mymap, 'geonode:maharashtra_state_distrcits', appendlayer)">Maharashtra State Districts</button>
+        -->
+    </div>
+
+    <p id="instructions" >Click the box in the upper-right corner of the map to choose which layers to display.</p>
+
+    <div id="mapid"></div>
+
+    <script type="text/javascript">
+
+      var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+
+      var layerList = {}
+
+      function main_map_init (map, options) {
+        
+
+        var orig = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          subdomains: ['a','b','c']
+        }).addTo(map);
+
+        map.setView([19.7515, 75.7139], 5);
+        
+        var i;
+        var shapeArr = {{ elements|safe }};
+        var overlayMaps = {};
+        // add all additional maps
+        for (i = 0; i < shapeArr.length; i++){
+          
+          var anyLayer = L.tileLayer.wms('http://139.59.68.199/geoserver/wms?', {
+            layers: shapeArr[i],
+            format: 'image/png',
+            transparent: true,
+          });
+
+          overlayMaps[ String(shapeArr[i]).split(":")[1] ] = anyLayer;
+        }
+
+        /*
+        var mahLayer = L.tileLayer.wms('http://139.59.68.199/geoserver/wms?', {
+            layers: 'geonode:maharashtra_state_distrcits',
+            format: 'image/png',
+            transparent: true,
+        });
+        var palLayer = L.tileLayer.wms('http://139.59.68.199/geoserver/wms?', {
+            layers: 'geonode:village_shapefile_palghar',
+            format: 'image/png',
+            transparent: true,
+        });
+        var baseMaps = {
+          "original": orig
+        }
+        var overlayMaps = {
+          "Maharashtra State districts": mahLayer,
+          "Palghar Village": palLayer,
+        };
+        */
+
+        L.control.layers(null, overlayMaps).addTo(map); //overlayMaps
+                
+        var ctlSidebar = L.control.sidebar('side-bar').addTo(map);  // does not work
+        /*
+        var ctlEasybutton = L.easyButton('glyphicon-transfer', function(){
+          ctlSidebar.toggle(); 
+        }).addTo(map);
+        */
+
+      }
+
+      main_map_init(mymap, 'nothing');
+/*
+      function putLayer (map, layer, callback) {
+        var wmsLayer = L.tileLayer.wms('http://139.59.68.199/geoserver/wms?', {
+            layers: layer,
+            format: 'image/png',
+            transparent: true,
+        }).addTo(map);  
+        callback(wmsLayer, layer);
+      }
+      function appendlayer(layerVar, layerName){
+        layerList.layerName = layerVar;
+        console.log(layerList);
+        console.log('test');
+        console.log(layerName);
+      }
+*/
+  </script>
+  </body>
+</html>

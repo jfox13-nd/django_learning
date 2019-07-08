@@ -1,0 +1,8 @@
+body {
+    font-family: verdana;
+    background: rgb(240, 207, 184);
+}
+
+body.main {
+    background: rgb(240, 207, 184) url("images/iitlogo.png") no-repeat center;
+}

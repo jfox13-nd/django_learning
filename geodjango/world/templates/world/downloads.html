@@ -1,0 +1,27 @@
+
+<html>
+  <head>
+
+    <title>Downloads</title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'world/style.css' %}" />
+
+    <style>
+      #mapid { height: 100%; width: 100%; }
+    </style>
+   
+  </head>
+  <body>
+
+    <h1>Downloads</h1>
+    <a href="/">Go Back</a>
+    <hr>
+    <br>
+    {% for element in elements %}
+        <li><a href="/downloads/{{ element }}/">{{ element }}</a>
+        </li>
+    {% endfor %}
+
+  </body>
+</html>

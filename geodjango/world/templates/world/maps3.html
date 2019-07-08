@@ -1,0 +1,45 @@
+{% load leaflet_tags %}
+<html>
+  <head>
+
+    {% leaflet_js %}
+    {% leaflet_css %}
+   <style>
+   #main { height: 100%; width: 100%; }
+   </style>
+   
+  </head>
+  <body>
+
+    <div id="side-bar">
+
+        <button class="collapsible" onclick="putLayer('main', 'geonode:goa_hlpca')">TEST PUT</button>
+    </div>
+
+    <h1>Maharashtra State Districts</h1>
+    <br>
+    <a href="/">Go Back</a>
+    <br>
+    {% leaflet_map "main" callback="main_map_init" %}
+    <script type="text/javascript">
+
+      function main_map_init (map, options) {
+        var wmsLayer = L.tileLayer.wms('http://139.59.68.199/geoserver/wms?', {
+            layers: 'geonode:maharashtra_state_distrcits',
+            format: 'image/png',
+            transparent: true
+        }).addTo(map);
+
+        map.setView([19.7515, 75.7139], 5);
+      }
+
+      function putLayer (map, layer) {
+        var wmsLayer = L.tileLayer.wms('http://139.59.68.199/geoserver/wms?', {
+            layers: 'geonode:village_shapefile_palghar',
+            format: 'image/png',
+            transparent: true
+        }).addTo(map);
+      }
+  </script>
+  </body>
+</html>
